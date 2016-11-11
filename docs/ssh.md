@@ -40,7 +40,8 @@ volumes: [
     {
         "name": "git-secret",
         "secret": {
-          "secretName": "git-creds"
+          "secretName": "git-creds",
+          "defaultMode": 0400
         }
     },
     ...
@@ -68,11 +69,12 @@ In your git-sync container configuration, mount the Secret Volume at "/etc/git-s
         {
             "name": "git-secret",
             "mountPath": "/etc/git-secret"
+            "readOnly": "true"
         },
         ...
     ],
 }
 ```
-**Note: Do not mount the Secret Volume with "readOnly: true".** Kubernetes mounts the Secret with permissions 0444 by default (not restrictive enough to be used as an SSH key), so the container runs a chmod command on the Secret. Mounting the Secret Volume as a read-only filesystem prevents chmod and thus prevents the use of the Secret as an SSH key.
+**Note: (Older version that does not support SecretVolumeSource.defaultMode) Do not mount the Secret Volume with "readOnly: true".** Kubernetes mounts the Secret with permissions 0444 by default (not restrictive enough to be used as an SSH key), so the container runs a chmod command on the Secret. Mounting the Secret Volume as a read-only filesystem prevents chmod and thus prevents the use of the Secret as an SSH key.
 
 ***TODO***: Remove the chmod command once Kubernetes allows for specifying permissions for a Secret Volume. See https://github.com/kubernetes/kubernetes/pull/28936.
