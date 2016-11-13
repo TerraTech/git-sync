@@ -28,6 +28,7 @@ RUN apk update --no-cache && apk add \
 RUN mv /usr/bin/ssh /usr/bin/ssh-binary
 ADD ssh-wrapper.sh /usr/bin/ssh
 RUN chmod 755 /usr/bin/ssh
+RUN mkdir -m2770 /etc/git-secret && chown nobody:nobody /etc/git-secret
 
 USER nobody:nobody
 ENTRYPOINT ["/ARG_BIN"]
